@@ -1,0 +1,83 @@
+### HEALTH CHECK
+
+GET http://localhost:3000/api/health
+
+### CREATE USER
+
+POST http://localhost:3000/api/users HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+
+{
+    "email": "john@doe.test",
+    "password": "supersavepassword"
+}
+
+### LOGIN USER
+
+# @name login
+
+POST http://localhost:3000/api/users/login HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+
+{
+    "email": "john@doe.test",
+    "password": "supersavepassword"
+}
+
+### CREATE MED #1
+
+POST http://localhost:3000/api/meds HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+x-user-id: {{login.response.body.user.userId}}
+
+{
+    "name": "med #1",
+    "description": "test med",
+    "expiredAt": "1750608175451"
+}
+
+### CREATE MED #2
+
+POST http://localhost:3000/api/meds HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+x-user-id: {{login.response.body.user.userId}}
+
+{
+    "name": "med #2",
+    "description": "test med #2",
+    "expiredAt": "1750608175461"
+}
+
+### GET MEDS
+
+# @name meds
+
+GET http://localhost:3000/api/meds HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+x-user-id: {{login.response.body.user.userId}}
+
+### UPDATE MED #1
+
+PUT http://localhost:3000/api/meds/{{meds.response.body.$.[1].id}} HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+x-user-id: {{login.response.body.user.userId}}
+
+{
+    "name": "med #1 - updated",
+    "description": "test med - updated",
+    "productId": "1234",
+    "expiredAt": "1750608175551"
+}
+
+### DELETE MED #1
+
+DELETE http://localhost:3000/api/meds/{{meds.response.body.$.[0].id}} HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+x-user-id: {{login.response.body.user.userId}}

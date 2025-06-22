@@ -1,0 +1,17 @@
+{
+  "name": "yeah-med-be",
+  "description": "backend for medication management",
+  "author": "flashback2k14",
+  "license": "MIT",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "index.js",
+  "keywords": [],
+  "scripts": {
+    "start": "node --watch src/index.js"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "express": "^5.1.0"
+  }
+}
