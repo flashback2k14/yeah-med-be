@@ -1,4 +1,6 @@
 import express from "express";
+import cors from "cors";
+
 import usersRouter from "./router/user.router.js";
 import medsRouter from "./router/meds.router.js";
 
@@ -6,6 +8,7 @@ try {
   const PORT = 3000;
   const app = express();
 
+  app.use(cors());
   app.use(express.json());
 
   app.get("/api/health", (req, res) => res.send("API is running"));
