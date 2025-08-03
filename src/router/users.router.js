@@ -1,7 +1,7 @@
 import express from "express";
 import bcrypt from "bcrypt";
+import { randomUUID } from "node:crypto";
 import { createUser, getUserByEmail } from "../db/queries.js";
-import { uuid } from "../util/index.js";
 
 const usersRouter = express.Router();
 
@@ -15,7 +15,7 @@ usersRouter.post("/", async (req, res) => {
   }
 
   const hashedPassword = await bcrypt.hash(password, saltRounds);
-  const userId = uuid();
+  const userId = randomUUID();
 
   const recordedUser = getUserByEmail.get(email);
   if (recordedUser) {
@@ -51,13 +51,14 @@ usersRouter.post("/login", async (req, res) => {
     return res.status(400).json({ error: "Incorrect Password" });
   }
 
-  return res
-    .status(200)
-    .json({ message: "Login Success", user: {
+  return res.status(200).json({
+    message: "Login Success",
+    user: {
       userId: registeredUser.user_id,
       email: registeredUser.email,
       createdAt: new Date(registeredUser.created_at).toISOString(),
-    } });
+    },
+  });
 });
 
 export default usersRouter;

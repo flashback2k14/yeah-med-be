@@ -1,4 +1,5 @@
 import express from "express";
+import { randomUUID } from "node:crypto";
 import {
   getUserById,
   createMed,
@@ -9,7 +10,6 @@ import {
   getCategories,
   getLocations,
 } from "../db/queries.js";
-import { uuid } from "../util/index.js";
 
 const medsRouter = express.Router();
 
@@ -33,7 +33,7 @@ medsRouter.post("/", (req, res) => {
   }
 
   const addedMed = createMed.get(
-    uuid(),
+    randomUUID(),
     fetchedUser.user_id,
     name,
     description,
