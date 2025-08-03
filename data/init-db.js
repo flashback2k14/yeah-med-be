@@ -1,4 +1,4 @@
-import { DatabaseSync } from 'node:sqlite';
+import { DatabaseSync } from "node:sqlite";
 
 const database = new DatabaseSync(`${import.meta.dirname}/yeahmed.db`);
 
@@ -16,8 +16,11 @@ const initDatabase = `
         name TEXT NOT NULL,
         description TEXT,
         product_id TEXT,
+        category TEXT NOT NULL,
+        location TEXT NOT NULL,
         expired_at INTEGER NOT NULL,
         created_at INTEGER NOT NULL,
+        UNIQUE(name, category, location),
         FOREIGN KEY (med_owner) REFERENCES users (user_id)
     );
 `;

@@ -1,3 +1,8 @@
+###
+### use this extension for testing the api:
+###     https://marketplace.visualstudio.com/items?itemName=humao.rest-client
+###
+
 ### HEALTH CHECK
 
 GET http://localhost:3000/api/health
@@ -36,7 +41,9 @@ x-user-id: {{login.response.body.user.userId}}
 {
     "name": "med #1",
     "description": "test med",
-    "expiredAt": "1750608175451"
+    "expiredAt": "1750608175451",
+    "category": "cat #1",
+    "location": "loc #1"
 }
 
 ### CREATE MED #2
@@ -49,7 +56,24 @@ x-user-id: {{login.response.body.user.userId}}
 {
     "name": "med #2",
     "description": "test med #2",
-    "expiredAt": "1750608175461"
+    "expiredAt": "1750608175461",
+    "category": "cat #1",
+    "location": "loc #1"
+}
+
+### CREATE MED #3
+
+POST http://localhost:3000/api/meds HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+x-user-id: {{login.response.body.user.userId}}
+
+{
+    "name": "med #3",
+    "description": "test med #3",
+    "expiredAt": "1750608175461",
+    "category": "cat #2",
+    "location": "loc #2"
 }
 
 ### GET MEDS
@@ -60,6 +84,21 @@ GET http://localhost:3000/api/meds HTTP/1.1
 Content-Type: application/json
 Accept: application/json
 x-user-id: {{login.response.body.user.userId}}
+
+### GET CATEGORIES
+
+GET http://localhost:3000/api/meds/categories HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+x-user-id: {{login.response.body.user.userId}}
+
+### GET LOCATIONS
+
+GET http://localhost:3000/api/meds/locations HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+x-user-id: {{login.response.body.user.userId}}
+
 
 ### UPDATE MED #1
 
@@ -72,7 +111,9 @@ x-user-id: {{login.response.body.user.userId}}
     "name": "med #1 - updated",
     "description": "test med - updated",
     "productId": "1234",
-    "expiredAt": "1750608175551"
+    "expiredAt": "1750608175551",
+    "category": "cat #1",
+    "location": "loc #1"
 }
 
 ### DELETE MED #1

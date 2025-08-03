@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 
-import usersRouter from "./router/user.router.js";
+import usersRouter from "./router/users.router.js";
 import medsRouter from "./router/meds.router.js";
 
 try {

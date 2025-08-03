@@ -6,6 +6,8 @@ import {
   getMedById,
   updateMedById,
   deleteMed,
+  getCategories,
+  getLocations,
 } from "../db/queries.js";
 import { uuid } from "../util/index.js";
 
@@ -18,7 +20,8 @@ medsRouter.post("/", (req, res) => {
     return res.status(400).json({ error: "Missing required header" });
   }
 
-  const { name, description, productId, expiredAt } = req.body;
+  const { name, description, productId, expiredAt, location, category } =
+    req.body;
 
   if (!name || !description) {
     return res.status(400).json({ error: "Missing required property" });
@@ -35,6 +38,8 @@ medsRouter.post("/", (req, res) => {
     name,
     description,
     productId ?? null,
+    category,
+    location,
     expiredAt,
     Date.now()
   );
@@ -44,6 +49,8 @@ medsRouter.post("/", (req, res) => {
     name,
     description,
     productId,
+    category,
+    location,
     expiredAt,
     joined: new Date(addedMed.created_at).toISOString(),
   });
@@ -64,16 +71,65 @@ medsRouter.get("/", (req, res) => {
   const meds = getMedsByUserId.all(userId);
   return res.status(200).json(
     meds.map(
-      ({ med_id, name, description, product_id, expired_at, created_at }) => ({
+      ({
+        med_id,
+        name,
+        description,
+        product_id,
+        category,
+        location,
+        expired_at,
+        created_at,
+      }) => ({
         id: med_id,
         name,
         description,
         productId: product_id,
+        category,
+        location,
         expiredAt: new Date(expired_at).toISOString(),
         createdAt: new Date(created_at).toISOString(),
       })
     )
   );
+});
+
+medsRouter.get("/categories", (req, res) => {
+  const userId = req.headers["x-user-id"];
+  if (!userId) {
+    return res.status(400).json({ error: "Missing required header" });
+  }
+
+  const fetchedUser = getUserById.get(userId);
+  if (!fetchedUser) {
+    return res.status(400).json({ error: "Unauthenticated user" });
+  }
+
+  const fetchedCategories = getCategories.all(userId);
+  if (!fetchedCategories) {
+    return res.status(400).json({ error: "No categories found." });
+  }
+
+  return res.status(200).json(fetchedCategories.map((entry) => entry.category));
+});
+
+medsRouter.get("/locations", (req, res) => {
+  const userId = req.headers["x-user-id"];
+  if (!userId) {
+    return res.status(400).json({ error: "Missing required header" });
+  }
+
+  const fetchedUser = getUserById.get(userId);
+  if (!fetchedUser) {
+    return res.status(400).json({ error: "Unauthenticated user" });
+  }
+
+  const fetchedLocations = getLocations.all(userId);
+  if (!fetchedLocations) {
+    return res.status(400).json({ error: "No locations found." });
+  }
+
+  return res.status(200).json(fetchedLocations.map((entry) => entry.location));
 });
 
 // UPDATE
@@ -83,7 +139,8 @@ medsRouter.put("/:id", (req, res) => {
     return res.status(400).json({ error: "Missing required header" });
   }
 
-  const { name, description, productId, expiredAt } = req.body;
+  const { name, description, productId, category, location, expiredAt } =
+    req.body;
   const medId = req.params.id;
 
   const recordedMed = getMedById.get(medId);
@@ -101,6 +158,8 @@ medsRouter.put("/:id", (req, res) => {
     name,
     description,
     productId,
+    category,
+    location,
     expiredAt,
     recordedMed.med_owner,
     medId
@@ -113,6 +172,8 @@ medsRouter.put("/:id", (req, res) => {
       name,
       description,
       productId: updatedMed.product_id,
+      category: updatedMed.category,
+      location: updatedMed.location,
       expiredAt: new Date(updatedMed.expired_at).toISOString(),
       createdAt: new Date(updatedMed.created_at).toISOString(),
     },

@@ -1,4 +1,4 @@
-import database from "../../data/init-db.js"
+import database from "../../data/init-db.js";
 
 const createUser = database.prepare(`
     INSERT INTO users (user_id, email, password_hash, created_at)
@@ -7,9 +7,10 @@ const createUser = database.prepare(`
 `);
 
 const createMed = database.prepare(`
-    INSERT INTO meds (med_id, med_owner, name, description, product_id, expired_at, created_at)
-    VALUES (?, ?, ?, ?, ?, ?, ?)
-    RETURNING med_id, name, description, product_id, expired_at, created_at
+    INSERT INTO meds (
+        med_id, med_owner, name, description, product_id, category, location, expired_at, created_at
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    RETURNING med_id, name, description, product_id, category, location, expired_at, created_at
 `);
 
 const getUserByEmail = database.prepare(`
@@ -29,21 +30,33 @@ const getMedById = database.prepare(`
 `);
 
 const updateMedById = database.prepare(`
-  UPDATE meds SET name = ?, description = ?, product_id = ?, expired_at = ? WHERE med_owner = ? AND med_id = ? 
-  RETURNING med_id, name, description, product_id, expired_at, created_at
+  UPDATE meds 
+    SET name = ?, description = ?, product_id = ?, category = ?, location = ?, expired_at = ? 
+  WHERE med_owner = ? AND med_id = ? 
+  RETURNING med_id, name, description, product_id, category, location, expired_at, created_at
 `);
 
 const deleteMed = database.prepare(`
   DELETE from meds WHERE med_id = ? AND med_owner = ?  
 `);
 
+const getCategories = database.prepare(`
+    SELECT DISTINCT category FROM MEDS WHERE med_owner = ?    
+`);
+
+const getLocations = database.prepare(`
+    SELECT DISTINCT location FROM MEDS WHERE med_owner = ?    
+`);
+
 export {
-    createUser,
-    createMed,
-    getUserByEmail,
-    getUserById,
-    getMedsByUserId,
-    getMedById,
-    updateMedById,
-    deleteMed
-}
+  createUser,
+  createMed,
+  getUserByEmail,
+  getUserById,
+  getMedsByUserId,
+  getMedById,
+  updateMedById,
+  deleteMed,
+  getCategories,
+  getLocations,
+};
