@@ -19,6 +19,7 @@ WORKDIR /
 
 # Nur Produktions-Dependencies und Build-Ergebnis übernehmen
 COPY --from=build /node_modules ./node_modules
+COPY --from=build /data ./data
 COPY --from=build /src ./src
 
 # Port für Express.js
