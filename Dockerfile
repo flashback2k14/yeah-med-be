@@ -1,5 +1,5 @@
 # ---------- STAGE 1: Build ----------
-FROM node:latest AS build
+FROM node:current-alpine AS build
 
 # Arbeitsverzeichnis
 WORKDIR /
@@ -12,7 +12,7 @@ RUN npm ci --omit=dev
 COPY . .
 
 # ---------- STAGE 2: Runtime ----------
-FROM node:latest AS runtime
+FROM node:current-alpine AS runtime
 
 # Arbeitsverzeichnis
 WORKDIR /
@@ -20,6 +20,7 @@ WORKDIR /
 # Nur Produktions-Dependencies und Build-Ergebnis übernehmen
 COPY --from=build /node_modules ./node_modules
 COPY --from=build /src ./src
+COPY --from=build .env .env
 
 # Port für Express.js
 EXPOSE 3000
@@ -27,4 +28,4 @@ EXPOSE 3000
 # Production Mode
 ENV NODE_ENV=production
 
-CMD ["npm", "start"]
+CMD ["node", "--env-file=.env", "src/index.js"]

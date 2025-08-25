@@ -9,7 +9,7 @@ backend for medication management
     ```bash
       colima start
     ```
-  - BUILD
+  - BUILD AND START
     ```bash
       docker-compose up --build -d
     ```
