@@ -1,4 +1,4 @@
-import database from "../../data/init-db.js";
+import database from "./init-db.js";
 
 const createUser = database.prepare(`
     INSERT INTO users (user_id, email, password_hash, created_at)

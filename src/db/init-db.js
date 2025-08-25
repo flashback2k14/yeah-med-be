@@ -1,6 +1,8 @@
 import { DatabaseSync } from "node:sqlite";
 
-const database = new DatabaseSync(`${import.meta.dirname}/yeahmed.db`);
+const database = new DatabaseSync(
+  process.env.DATABASE_PATH ?? "data/yeahmed.db"
+);
 
 const initDatabase = `
     CREATE TABLE IF NOT EXISTS users (
