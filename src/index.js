@@ -8,7 +8,11 @@ try {
   const PORT = 3000;
   const app = express();
 
-  app.use(cors());
+  app.use(
+    cors({
+      origin: process.env.CORS_ORIGIN_URL,
+    })
+  );
   app.use(express.json());
 
   app.get("/api/health", (req, res) => res.send("API is running"));
