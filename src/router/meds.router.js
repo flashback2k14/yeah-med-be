@@ -20,11 +20,29 @@ medsRouter.post("/", (req, res) => {
     return res.status(400).json({ error: "Missing required header" });
   }
 
-  const { name, description, productId, expiredAt, location, category } =
+  const { name, category, location, expiredAt, description, productId } =
     req.body;
 
-  if (!name || !description) {
-    return res.status(400).json({ error: "Missing required property" });
+  if (!name) {
+    return res.status(400).json({ error: "Missing required property: 'name'" });
+  }
+
+  if (!category) {
+    return res
+      .status(400)
+      .json({ error: "Missing required property: 'category'" });
+  }
+
+  if (!location) {
+    return res
+      .status(400)
+      .json({ error: "Missing required property: 'location'" });
+  }
+
+  if (!expiredAt) {
+    return res
+      .status(400)
+      .json({ error: "Missing required property: 'expiredAt'" });
   }
 
   const fetchedUser = getUserById.get(userId);

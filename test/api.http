@@ -3,13 +3,15 @@
 ###     https://marketplace.visualstudio.com/items?itemName=humao.rest-client
 ###
 
+@baseUrl = http://localhost:3000
+
 ### HEALTH CHECK
 
-GET http://localhost:3000/api/health
+GET {{baseUrl}}/api/health
 
 ### CREATE USER
 
-POST http://localhost:3000/api/users HTTP/1.1
+POST {{baseUrl}}/api/users HTTP/1.1
 Content-Type: application/json
 Accept: application/json
 
@@ -22,7 +24,7 @@ Accept: application/json
 
 # @name login
 
-POST http://localhost:3000/api/users/login HTTP/1.1
+POST {{baseUrl}}/api/users/login HTTP/1.1
 Content-Type: application/json
 Accept: application/json
 
@@ -33,7 +35,7 @@ Accept: application/json
 
 ### CREATE MED #1
 
-POST http://localhost:3000/api/meds HTTP/1.1
+POST {{baseUrl}}/api/meds HTTP/1.1
 Content-Type: application/json
 Accept: application/json
 x-user-id: {{login.response.body.user.userId}}
@@ -48,7 +50,7 @@ x-user-id: {{login.response.body.user.userId}}
 
 ### CREATE MED #2
 
-POST http://localhost:3000/api/meds HTTP/1.1
+POST {{baseUrl}}/api/meds HTTP/1.1
 Content-Type: application/json
 Accept: application/json
 x-user-id: {{login.response.body.user.userId}}
@@ -63,7 +65,7 @@ x-user-id: {{login.response.body.user.userId}}
 
 ### CREATE MED #3
 
-POST http://localhost:3000/api/meds HTTP/1.1
+POST {{baseUrl}}/api/meds HTTP/1.1
 Content-Type: application/json
 Accept: application/json
 x-user-id: {{login.response.body.user.userId}}
@@ -80,21 +82,21 @@ x-user-id: {{login.response.body.user.userId}}
 
 # @name meds
 
-GET http://localhost:3000/api/meds HTTP/1.1
+GET {{baseUrl}}/api/meds HTTP/1.1
 Content-Type: application/json
 Accept: application/json
 x-user-id: {{login.response.body.user.userId}}
 
 ### GET CATEGORIES
 
-GET http://localhost:3000/api/meds/categories HTTP/1.1
+GET {{baseUrl}}/api/meds/categories HTTP/1.1
 Content-Type: application/json
 Accept: application/json
 x-user-id: {{login.response.body.user.userId}}
 
 ### GET LOCATIONS
 
-GET http://localhost:3000/api/meds/locations HTTP/1.1
+GET {{baseUrl}}/api/meds/locations HTTP/1.1
 Content-Type: application/json
 Accept: application/json
 x-user-id: {{login.response.body.user.userId}}
@@ -102,7 +104,7 @@ x-user-id: {{login.response.body.user.userId}}
 
 ### UPDATE MED #1
 
-PUT http://localhost:3000/api/meds/{{meds.response.body.$.[1].id}} HTTP/1.1
+PUT {{baseUrl}}/api/meds/{{meds.response.body.$.[1].id}} HTTP/1.1
 Content-Type: application/json
 Accept: application/json
 x-user-id: {{login.response.body.user.userId}}
@@ -118,7 +120,7 @@ x-user-id: {{login.response.body.user.userId}}
 
 ### DELETE MED #1
 
-DELETE http://localhost:3000/api/meds/{{meds.response.body.$.[0].id}} HTTP/1.1
+DELETE {{baseUrl}}/api/meds/{{meds.response.body.$.[0].id}} HTTP/1.1
 Content-Type: application/json
 Accept: application/json
 x-user-id: {{login.response.body.user.userId}}
