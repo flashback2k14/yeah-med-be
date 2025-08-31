@@ -10,6 +10,8 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=production
+      - DATABASE_PATH=
+      - CORS_ORIGIN_URL=
     restart: unless-stopped
     volumes:
       # Mountet dein lokales Projektverzeichnis ins Container-Arbeitsverzeichnis

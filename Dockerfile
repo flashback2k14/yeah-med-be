@@ -27,4 +27,4 @@ EXPOSE 3000
 # Production Mode
 ENV NODE_ENV=production
 
-CMD ["node", "--env-file=.env", "src/index.js"]
+CMD ["node", "src/index.js"]
