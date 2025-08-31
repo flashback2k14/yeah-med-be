@@ -3,13 +3,13 @@
   "description": "backend for medication management",
   "author": "flashback2k14",
   "license": "MIT",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "type": "module",
   "main": "index.js",
   "keywords": [],
   "scripts": {
-    "start": "node --env-file=.env src/index.js",
-    "start:dev": "node --watch src/index.js"
+    "start": "node src/index.js",
+    "start:dev": "node --env-file=.env --watch src/index.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
