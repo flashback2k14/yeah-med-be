@@ -1,5 +1,7 @@
 import express from "express";
 import cors from "cors";
+import helmet from "helmet";
+import { rateLimit } from 'express-rate-limit'
 
 import usersRouter from "./router/users.router.js";
 import medsRouter from "./router/meds.router.js";
@@ -12,6 +14,14 @@ try {
   const PORT = 3000;
   const app = express();
 
+  app.use(rateLimit({
+    windowMs: 60 * 1000,
+    limit: 100,
+    standardHeaders: 'draft-8',
+    legacyHeaders: false,
+    ipv6Subnet: 56,
+  }));
+  app.use(helmet());
   app.use(
     cors({
       origin: process.env.CORS_ORIGIN_URL,
