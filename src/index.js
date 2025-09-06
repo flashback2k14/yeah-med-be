@@ -4,7 +4,11 @@ import cors from "cors";
 import usersRouter from "./router/users.router.js";
 import medsRouter from "./router/meds.router.js";
 
+import pkg from "./../package.json" with { type: "json" };
+
 try {
+  console.log(`VERSION: ${pkg.version}`);
+
   const PORT = 3000;
   const app = express();
 
