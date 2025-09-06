@@ -1,13 +1,18 @@
 import express from "express";
 import bcrypt from "bcrypt";
 import { randomUUID } from "node:crypto";
-import { createUser, getUserByEmail } from "../db/queries.js";
+import {
+  createUser,
+  getUserByEmail,
+  getUserById,
+  deleteUser,
+} from "../db/queries.js";
 
 const usersRouter = express.Router();
 
 const saltRounds = 10;
 
-usersRouter.post("/", async (req, res) => {
+usersRouter.post("/signup", async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -30,7 +35,7 @@ usersRouter.post("/", async (req, res) => {
   });
 });
 
-usersRouter.post("/login", async (req, res) => {
+usersRouter.post("/signin", async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -59,6 +64,28 @@ usersRouter.post("/login", async (req, res) => {
       createdAt: new Date(registeredUser.created_at).toISOString(),
     },
   });
+});
+
+usersRouter.delete("/:id", (req, res) => {
+  const userIdHeader = req.headers["x-user-id"];
+  const userIdParam = req.params.id;
+
+  if (!userIdHeader) {
+    return res.status(400).json({ error: "Missing required header" });
+  }
+
+  if (userIdHeader !== userIdParam) {
+    return res.status(403).json({ error: "User unauthorized to delete‚" });
+  }
+
+  const user = getUserById.get(userIdParam);
+  if (!user) {
+    return res.status(404).json({ error: "User not found" });
+  }
+
+  deleteUser.run(userIdParam);
+
+  return res.status(200).json({ message: "User successfully deleted!" });
 });
 
 export default usersRouter;

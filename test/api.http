@@ -11,7 +11,7 @@ GET {{baseUrl}}/api/health
 
 ### CREATE USER
 
-POST {{baseUrl}}/api/users HTTP/1.1
+POST {{baseUrl}}/api/users/signup HTTP/1.1
 Content-Type: application/json
 Accept: application/json
 
@@ -24,7 +24,7 @@ Accept: application/json
 
 # @name login
 
-POST {{baseUrl}}/api/users/login HTTP/1.1
+POST {{baseUrl}}/api/users/signin HTTP/1.1
 Content-Type: application/json
 Accept: application/json
 
@@ -124,3 +124,35 @@ DELETE {{baseUrl}}/api/meds/{{meds.response.body.$.[0].id}} HTTP/1.1
 Content-Type: application/json
 Accept: application/json
 x-user-id: {{login.response.body.user.userId}}
+
+
+### DELETE USER - Part 1
+
+# @name user
+
+POST {{baseUrl}}/api/users/signup HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+
+{
+    "email": "john2@doe.test",
+    "password": "supersavepassword"
+}
+
+### DELETE USER - Part 2
+
+DELETE {{baseUrl}}/api/users/{{user.response.body.userId}} HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+x-user-id: {{user.response.body.userId}}
+
+### DELETE USER - Part 3
+
+POST {{baseUrl}}/api/users/signin HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+
+{
+    "email": "john2@doe.test",
+    "password": "supersavepassword"
+}
