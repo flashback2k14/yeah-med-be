@@ -20,6 +20,7 @@ WORKDIR /
 # Nur Produktions-Dependencies und Build-Ergebnis übernehmen
 COPY --from=build /node_modules ./node_modules
 COPY --from=build /src ./src
+COPY --from=build package.json package.json
 
 # Port für Express.js
 EXPOSE 3000
