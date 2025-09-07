@@ -9,10 +9,6 @@
 
 GET {{baseUrl}}/api/health
 
-### TEST
-
-GET {{baseUrl}}/ip
-
 ### CREATE USER
 
 POST {{baseUrl}}/api/users/signup HTTP/1.1

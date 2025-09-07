@@ -15,4 +15,8 @@ services:
     restart: unless-stopped
     volumes:
       # Mountet dein lokales Projektverzeichnis ins Container-Arbeitsverzeichnis
-      - ./data:/data
+      - yeah-medication-backend-data:/data
+
+  volumes:
+    yeah-medication-backend-data:
+      external: true
