@@ -14,6 +14,8 @@ try {
   const PORT = 3000;
   const app = express();
 
+  app.set('trust proxy', 1 /* number of proxies between user and server */)
+
   app.use(rateLimit({
     windowMs: 60 * 1000,
     limit: 100,
@@ -30,6 +32,10 @@ try {
   app.use(express.json());
 
   app.get("/api/health", (req, res) => res.send("API is running"));
+  app.get('/ip', (request, response) => {
+    response.send(request.ip);
+  });
+
   app.use("/api/users", usersRouter);
   app.use("/api/meds", medsRouter);
 
