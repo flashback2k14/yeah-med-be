@@ -1,7 +1,6 @@
 import express from "express";
 import { randomUUID } from "node:crypto";
 import {
-  getUserById,
   createMed,
   getMedsByUserId,
   getMedById,
@@ -10,16 +9,12 @@ import {
   getCategories,
   getLocations,
 } from "../db/queries.js";
+import authenticate from "../middleware/authenticate.js";
 
 const medsRouter = express.Router();
 
 // CREATE
-medsRouter.post("/", (req, res) => {
-  const userId = req.headers["x-user-id"];
-  if (!userId) {
-    return res.status(400).json({ error: "Missing required header" });
-  }
-
+medsRouter.post("/", authenticate, (req, res) => {
   const { name, category, location, expiredAt, description, productId } =
     req.body;
 
@@ -45,14 +40,9 @@ medsRouter.post("/", (req, res) => {
       .json({ error: "Missing required property: 'expiredAt'" });
   }
 
-  const fetchedUser = getUserById.get(userId);
-  if (!fetchedUser) {
-    return res.status(400).json({ error: "User not found" });
-  }
-
   const addedMed = createMed.get(
     randomUUID(),
-    fetchedUser.user_id,
+    req.user.user_id,
     name,
     description,
     productId ?? null,
@@ -75,18 +65,8 @@ medsRouter.post("/", (req, res) => {
 });
 
 // READ
-medsRouter.get("/", (req, res) => {
-  const userId = req.headers["x-user-id"];
-  if (!userId) {
-    return res.status(400).json({ error: "Missing required header" });
-  }
-
-  const fetchedUser = getUserById.get(userId);
-  if (!fetchedUser) {
-    return res.status(400).json({ error: "Unauthenticated user" });
-  }
-
-  const meds = getMedsByUserId.all(userId);
+medsRouter.get("/", authenticate, (req, res) => {
+  const meds = getMedsByUserId.all(req.user.user_id);
   return res.status(200).json(
     meds.map(
       ({
@@ -112,18 +92,8 @@ medsRouter.get("/", (req, res) => {
   );
 });
 
-medsRouter.get("/categories", (req, res) => {
-  const userId = req.headers["x-user-id"];
-  if (!userId) {
-    return res.status(400).json({ error: "Missing required header" });
-  }
-
-  const fetchedUser = getUserById.get(userId);
-  if (!fetchedUser) {
-    return res.status(400).json({ error: "Unauthenticated user" });
-  }
-
-  const fetchedCategories = getCategories.all(userId);
+medsRouter.get("/categories", authenticate, (req, res) => {
+  const fetchedCategories = getCategories.all(req.user.user_id);
   if (!fetchedCategories) {
     return res.status(400).json({ error: "No categories found." });
   }
@@ -131,18 +101,8 @@ medsRouter.get("/categories", (req, res) => {
   return res.status(200).json(fetchedCategories.map((entry) => entry.category));
 });
 
-medsRouter.get("/locations", (req, res) => {
-  const userId = req.headers["x-user-id"];
-  if (!userId) {
-    return res.status(400).json({ error: "Missing required header" });
-  }
-
-  const fetchedUser = getUserById.get(userId);
-  if (!fetchedUser) {
-    return res.status(400).json({ error: "Unauthenticated user" });
-  }
-
-  const fetchedLocations = getLocations.all(userId);
+medsRouter.get("/locations", authenticate, (req, res) => {
+  const fetchedLocations = getLocations.all(req.user.user_id);
   if (!fetchedLocations) {
     return res.status(400).json({ error: "No locations found." });
   }
@@ -151,12 +111,7 @@ medsRouter.get("/locations", (req, res) => {
 });
 
 // UPDATE
-medsRouter.put("/:id", (req, res) => {
-  const userId = req.headers["x-user-id"];
-  if (!userId) {
-    return res.status(400).json({ error: "Missing required header" });
-  }
-
+medsRouter.put("/:id", authenticate, (req, res) => {
   const { name, description, productId, category, location, expiredAt } =
     req.body;
   const medId = req.params.id;
@@ -166,7 +121,7 @@ medsRouter.put("/:id", (req, res) => {
     return res.status(404).json({ error: "Med not found" });
   }
 
-  if (recordedMed.med_owner !== userId) {
+  if (recordedMed.med_owner !== req.user.user_id) {
     return res
       .status(401)
       .json({ error: "User unauthorized to update this med" });
@@ -199,25 +154,20 @@ medsRouter.put("/:id", (req, res) => {
 });
 
 // DELETE
-medsRouter.delete("/:id", (req, res) => {
-  const userId = req.headers["x-user-id"];
-  if (!userId) {
-    return res.status(400).json({ error: "Missing required header" });
-  }
-
+medsRouter.delete("/:id", authenticate, (req, res) => {
   const medId = req.params.id;
   const recordedMed = getMedById.get(medId);
   if (!recordedMed) {
     return res.status(404).json({ error: "Med not found" });
   }
 
-  if (recordedMed.med_owner !== userId) {
+  if (recordedMed.med_owner !== req.user.user_id) {
     return res
       .status(401)
       .json({ error: "User unauthorized to delete this med" });
   }
 
-  deleteMed.run(medId, userId);
+  deleteMed.run(medId, req.user.user_id);
 
   return res.status(200).json({ message: "Med successfully deleted!" });
 });

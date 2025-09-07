@@ -78,6 +78,21 @@ x-user-id: {{login.response.body.user.userId}}
     "location": "loc #2"
 }
 
+### CREATE MED #4
+
+POST {{baseUrl}}/api/meds HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+x-user-id: {{login.response.body.user.userId}}
+
+{
+    "name": "med #4",
+    "description": "test med #4",
+    "expiredAt": "1750608175461",
+    "category": "cat #2",
+    "location": "loc #2"
+}
+
 ### GET MEDS
 
 # @name meds
@@ -104,7 +119,7 @@ x-user-id: {{login.response.body.user.userId}}
 
 ### UPDATE MED #1
 
-PUT {{baseUrl}}/api/meds/{{meds.response.body.$.[1].id}} HTTP/1.1
+PUT {{baseUrl}}/api/meds/{{meds.response.body.$.[0].id}} HTTP/1.1
 Content-Type: application/json
 Accept: application/json
 x-user-id: {{login.response.body.user.userId}}
@@ -141,10 +156,10 @@ Accept: application/json
 
 ### DELETE USER - Part 2
 
-DELETE {{baseUrl}}/api/users/{{user.response.body.userId}} HTTP/1.1
+DELETE {{baseUrl}}/api/users/{{user.response.body.user.userId}} HTTP/1.1
 Content-Type: application/json
 Accept: application/json
-x-user-id: {{user.response.body.userId}}
+x-user-id: {{user.response.body.user.userId}}
 
 ### DELETE USER - Part 3
 

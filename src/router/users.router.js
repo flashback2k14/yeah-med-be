@@ -7,6 +7,7 @@ import {
   getUserById,
   deleteUser,
 } from "../db/queries.js";
+import authenticate from "../middleware/authenticate.js";
 
 const usersRouter = express.Router();
 
@@ -29,9 +30,12 @@ usersRouter.post("/signup", async (req, res) => {
 
   const newUser = createUser.get(userId, email, hashedPassword, Date.now());
   return res.status(201).json({
-    userId: newUser.user_id,
-    username: newUser.username,
-    joined: new Date(newUser.created_at).toISOString(),
+    message: "Signup success",
+    user: {
+      userId: newUser.user_id,
+      email: newUser.email,
+      createdAt: new Date(newUser.created_at).toISOString(),
+    },
   });
 });
 
@@ -57,7 +61,7 @@ usersRouter.post("/signin", async (req, res) => {
   }
 
   return res.status(200).json({
-    message: "Login Success",
+    message: "Signin success",
     user: {
       userId: registeredUser.user_id,
       email: registeredUser.email,
@@ -66,26 +70,15 @@ usersRouter.post("/signin", async (req, res) => {
   });
 });
 
-usersRouter.delete("/:id", (req, res) => {
-  const userIdHeader = req.headers["x-user-id"];
+usersRouter.delete("/:id", authenticate, (req, res) => {
   const userIdParam = req.params.id;
-
-  if (!userIdHeader) {
-    return res.status(400).json({ error: "Missing required header" });
-  }
-
-  if (userIdHeader !== userIdParam) {
-    return res.status(403).json({ error: "User unauthorized to delete‚" });
-  }
-
-  const user = getUserById.get(userIdParam);
-  if (!user) {
-    return res.status(404).json({ error: "User not found" });
+  if (userIdParam !== req.user.user_id) {
+    return res.status(403).json({ error: "User unauthorized to delete" });
   }
 
   deleteUser.run(userIdParam);
 
-  return res.status(200).json({ message: "User successfully deleted!" });
+  return res.status(200).json({ message: "User successfully deleted" });
 });
 
 export default usersRouter;
