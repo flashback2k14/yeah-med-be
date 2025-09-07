@@ -17,6 +17,6 @@ services:
       # Mountet dein lokales Projektverzeichnis ins Container-Arbeitsverzeichnis
       - yeah-medication-backend-data:/data
 
-  volumes:
-    yeah-medication-backend-data:
-      external: true
+volumes:
+  yeah-medication-backend-data:
+    external: true
