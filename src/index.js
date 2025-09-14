@@ -7,6 +7,7 @@ import usersRouter from "./router/users.router.js";
 import medsRouter from "./router/meds.router.js";
 
 import pkg from "../package.json" with { type: "json" };
+import mailer from "./mailer/index.js";
 
 try {
   console.log(`VERSION: ${pkg.version}`);
@@ -36,6 +37,10 @@ try {
   app.use("/api/meds", medsRouter);
 
   app.listen(PORT, () => console.log(`Listening on PORT ${PORT}`));
+
+  // works -> add scheduler task
+  // mailer();
+
 } catch (error) {
   console.error(error);
 }

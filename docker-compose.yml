@@ -12,6 +12,10 @@ services:
       - NODE_ENV=production
       - DATABASE_PATH=${DATABASE_PATH}
       - CORS_ORIGIN_URL=${CORS_ORIGIN_URL}
+      - EMAIL_HOST=${EMAIL_HOST}
+      - EMAIL_USER=${EMAIL_USER}
+      - EMAIL_PW=${EMAIL_PW}
+      - EMAIL_FROM=${EMAIL_FROM}
     restart: unless-stopped
     volumes:
       # Mountet dein lokales Projektverzeichnis ins Container-Arbeitsverzeichnis
