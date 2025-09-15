@@ -4,19 +4,28 @@ import {
   createMed,
   getMedsByUserId,
   getMedById,
-  updateMedById,
-  deleteMed,
   getCategories,
   getLocations,
-} from "../db/queries.js";
+  updateMedById,
+  deleteMed,
+} from "../db/queries/meds-queries.js";
 import authenticate from "../middleware/authenticate.js";
 
 const medsRouter = express.Router();
 
 // CREATE
 medsRouter.post("/", authenticate, (req, res) => {
-  const { name, category, location, expiredAt, description, productId } =
-    req.body;
+  const {
+    name,
+    category,
+    categoryColor,
+    location,
+    count,
+    company,
+    expiredAt,
+    description,
+    productId,
+  } = req.body;
 
   if (!name) {
     return res.status(400).json({ error: "Missing required property: 'name'" });
@@ -34,6 +43,12 @@ medsRouter.post("/", authenticate, (req, res) => {
       .json({ error: "Missing required property: 'location'" });
   }
 
+  if (!company) {
+    return res
+      .status(400)
+      .json({ error: "Missing required property: 'company'" });
+  }
+
   if (!expiredAt) {
     return res
       .status(400)
@@ -44,10 +59,13 @@ medsRouter.post("/", authenticate, (req, res) => {
     randomUUID(),
     req.user.user_id,
     name,
-    description,
+    description ?? null,
     productId ?? null,
     category,
+    categoryColor ?? null,
     location,
+    count ?? null,
+    company,
     expiredAt,
     Date.now()
   );
@@ -59,6 +77,8 @@ medsRouter.post("/", authenticate, (req, res) => {
     productId,
     category,
     location,
+    count,
+    company,
     expiredAt,
     joined: new Date(addedMed.created_at).toISOString(),
   });
@@ -75,18 +95,26 @@ medsRouter.get("/", authenticate, (req, res) => {
         description,
         product_id,
         category,
+        category_color,
         location,
+        count,
+        company,
         expired_at,
         created_at,
+        is_expired,
       }) => ({
         id: med_id,
         name,
         description,
         productId: product_id,
         category,
+        categoryColor: category_color,
         location,
+        count,
+        company,
         expiredAt: new Date(expired_at).toISOString(),
         createdAt: new Date(created_at).toISOString(),
+        isExpired: Boolean(is_expired),
       })
     )
   );
@@ -112,8 +140,17 @@ medsRouter.get("/locations", authenticate, (req, res) => {
 
 // UPDATE
 medsRouter.put("/:id", authenticate, (req, res) => {
-  const { name, description, productId, category, location, expiredAt } =
-    req.body;
+  const {
+    name,
+    description,
+    productId,
+    category,
+    categoryColor,
+    location,
+    count,
+    company,
+    expiredAt,
+  } = req.body;
   const medId = req.params.id;
 
   const recordedMed = getMedById.get(medId);
@@ -132,7 +169,10 @@ medsRouter.put("/:id", authenticate, (req, res) => {
     description,
     productId,
     category,
+    categoryColor ?? null,
     location,
+    count ?? null,
+    company,
     expiredAt,
     recordedMed.med_owner,
     medId
@@ -146,7 +186,10 @@ medsRouter.put("/:id", authenticate, (req, res) => {
       description,
       productId: updatedMed.product_id,
       category: updatedMed.category,
+      categoryColor: updatedMed.category_color,
       location: updatedMed.location,
+      count: updatedMed.count,
+      company: updatedMed.company,
       expiredAt: new Date(updatedMed.expired_at).toISOString(),
       createdAt: new Date(updatedMed.created_at).toISOString(),
     },

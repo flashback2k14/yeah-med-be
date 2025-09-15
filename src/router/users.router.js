@@ -4,9 +4,8 @@ import { randomUUID } from "node:crypto";
 import {
   createUser,
   getUserByEmail,
-  getUserById,
   deleteUser,
-} from "../db/queries.js";
+} from "../db/queries/users-queries.js";
 import authenticate from "../middleware/authenticate.js";
 
 const usersRouter = express.Router();

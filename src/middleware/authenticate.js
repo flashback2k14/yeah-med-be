@@ -1,4 +1,4 @@
-import { getUserById } from "../db/queries.js";
+import { getUserById } from "../db/queries/users-queries.js";
 
 export default function authenticate(req, res, next) {
   try {
