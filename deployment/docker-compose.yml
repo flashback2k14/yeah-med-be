@@ -3,7 +3,6 @@ services:
     build:
       context: ..
       dockerfile: Dockerfile
-    image: flashback2k14/yeah-medication-backend
     container_name: yeah-medication-backend
     ports:
       - "${HOST_PORT}:${CONTAINER_PORT:-3000}"

@@ -3,7 +3,7 @@
   "description": "backend for medication management",
   "author": "flashback2k14",
   "license": "MIT",
-  "version": "1.9.0",
+  "version": "1.10.0",
   "type": "module",
   "main": "index.js",
   "keywords": [],
