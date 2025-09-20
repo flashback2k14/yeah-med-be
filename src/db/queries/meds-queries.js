@@ -32,10 +32,10 @@ const createMed = database.prepare(`
 const getMedsByUserId = database.prepare(`
   SELECT 
      m.*
-    ,m.expired_at / 1000 <= unixepoch(datetime('now')) as is_expired
+    ,unixepoch(m.expired_at) <= unixepoch(datetime('now')) as is_expired
   FROM MEDS m
   WHERE med_owner = ?
-  ORDER BY m.expired_at / 1000 <= unixepoch(datetime('now')) DESC
+  ORDER BY unixepoch(m.expired_at) <= unixepoch(datetime('now')) DESC
 `);
 
 const getMedById = database.prepare(`

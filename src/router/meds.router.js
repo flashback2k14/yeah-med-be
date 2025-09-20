@@ -166,7 +166,7 @@ medsRouter.put("/:id", authenticate, (req, res) => {
     categoryColor ?? null,
     location,
     count ?? null,
-    company,
+    company ?? null,
     expiredAt,
     recordedMed.med_owner,
     medId
