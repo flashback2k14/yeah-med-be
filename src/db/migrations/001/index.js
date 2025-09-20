@@ -10,10 +10,8 @@ export default function migration_001_script(database) {
   if (!id) {
     alterTable(
       database,
-      `
-      ALTER TABLE meds 
-      ADD COLUMN category_color TEXT;
-    `
+      `ALTER TABLE meds 
+       ADD COLUMN category_color TEXT;`
     );
 
     create(database).get(

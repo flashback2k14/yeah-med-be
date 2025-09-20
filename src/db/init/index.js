@@ -39,7 +39,7 @@ function initDatabase() {
 
   database.exec(init_database);
 
-  runMigrations(database);
+  // runMigrations(database);
 
   console.log("END: initDatabase");
 

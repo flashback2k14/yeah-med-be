@@ -10,10 +10,8 @@ export default function migration_002_script(database) {
   if (!id) {
     alterTable(
       database,
-      `
-      ALTER TABLE meds 
-      ADD COLUMN count INTEGER;
-    `
+      `ALTER TABLE meds 
+       ADD COLUMN count INTEGER;`
     );
 
     create(database).get("002", "add count on meds table", Date.now());

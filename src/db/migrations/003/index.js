@@ -10,24 +10,11 @@ export default function migration_003_script(database) {
   if (!id) {
     alterTable(
       database,
-      `
-      ALTER TABLE meds 
-      ADD COLUMN company TEXT NOT NULL DEFAULT 'TBD';
-    `
+      `ALTER TABLE meds 
+       ADD COLUMN company TEXT;`
     );
 
-    alterTable(
-      database,
-      `
-      CREATE UNIQUE INDEX idx_meds_company ON meds(company);
-    `
-    );
-
-    create(database).get(
-      "003",
-      "add company and unique constraint on meds table",
-      Date.now()
-    );
+    create(database).get("003", "add company on meds table", Date.now());
 
     console.log("   Migration_003_script executed.");
   }
