@@ -10,7 +10,6 @@ import pkg from "../package.json" with { type: "json" };
 
 try {
   console.log(`VERSION: ${pkg.version}`);
-  console.log(process.env.CORS_ORIGIN_URL);
 
   const PORT = 3000;
   const app = express();
