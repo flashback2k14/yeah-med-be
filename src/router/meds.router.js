@@ -43,12 +43,6 @@ medsRouter.post("/", authenticate, (req, res) => {
       .json({ error: "Missing required property: 'location'" });
   }
 
-  if (!company) {
-    return res
-      .status(400)
-      .json({ error: "Missing required property: 'company'" });
-  }
-
   if (!expiredAt) {
     return res
       .status(400)
@@ -65,7 +59,7 @@ medsRouter.post("/", authenticate, (req, res) => {
     categoryColor ?? null,
     location,
     count ?? null,
-    company,
+    company ?? null,
     expiredAt,
     Date.now()
   );
