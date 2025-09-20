@@ -1,20 +1,18 @@
-version: "3.9"
-
 services:
   app:
     build:
-      context: .
+      context: ..
       dockerfile: Dockerfile
+    image: flashback2k14/yeah-medication-backend
     container_name: yeah-medication-backend
     ports:
-      - "3000:3000"
+      - "${HOST_PORT}:${CONTAINER_PORT:-3000}"
     environment:
       - NODE_ENV=production
       - DATABASE_PATH=${DATABASE_PATH}
       - CORS_ORIGIN_URL=${CORS_ORIGIN_URL}
     restart: unless-stopped
     volumes:
-      # Mountet dein lokales Projektverzeichnis ins Container-Arbeitsverzeichnis
       - yeah-medication-backend-data:/data
 
 volumes:

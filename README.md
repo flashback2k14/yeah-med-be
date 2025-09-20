@@ -21,3 +21,11 @@ backend for medication management
     ```bash
     docker-compose down
     ```
+  - LIST
+    ```bash
+    docker image ls
+    ```
+  - REMOVE
+    ```bash
+    docker image rm -f <IMAGE>
+    ```
