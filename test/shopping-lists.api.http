@@ -1,0 +1,60 @@
+###
+### use this extension for testing the api:
+###     https://marketplace.visualstudio.com/items?itemName=humao.rest-client
+###
+
+@baseUrl = http://localhost:3000
+
+### LOGIN USER
+
+# @name login
+
+POST {{baseUrl}}/api/users/signin HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+
+{
+    "email": "john@doe.test",
+    "password": "supersavepassword"
+}
+
+
+### CREATE
+
+POST {{baseUrl}}/api/shopping-lists HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+x-user-id: {{login.response.body.user.userId}}
+
+{
+    "name": "med #1",
+    "company": "comp #1"
+}
+
+### READ
+
+# @name sl
+
+GET {{baseUrl}}/api/shopping-lists HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+x-user-id: {{login.response.body.user.userId}}
+
+### UPDATE #1
+
+PUT {{baseUrl}}/api/shopping-lists/{{sl.response.body.$.[0].id}} HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+x-user-id: {{login.response.body.user.userId}}
+
+{
+    "name": "med #1 - updated",
+    "company": "comp #1 - updated"
+}
+
+### DELETE #1
+
+DELETE {{baseUrl}}/api/shopping-lists/{{sl.response.body.$.[0].id}} HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+x-user-id: {{login.response.body.user.userId}}
