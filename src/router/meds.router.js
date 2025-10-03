@@ -73,6 +73,7 @@ medsRouter.post("/", authenticate, (req, res) => {
     location,
     count,
     company,
+    categoryColor,
     expiredAt,
     joined: new Date(addedMed.created_at).toISOString(),
   });
