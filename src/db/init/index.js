@@ -35,6 +35,15 @@ function initDatabase() {
       name TEXT NOT NULL UNIQUE,
       created_at INTEGER NOT NULL
     );
+
+    CREATE TABLE IF NOT EXISTS shopping_lists (
+      shopping_list_id TEXT PRIMARY KEY,
+      med_owner TEXT NOT NULL,
+      name TEXT NOT NULL,
+      company TEXT,
+      created_at INTEGER NOT NULL,
+      FOREIGN KEY (med_owner) REFERENCES users (user_id)
+    );
   `;
 
   database.exec(init_database);
