@@ -6,6 +6,7 @@ import { rateLimit } from 'express-rate-limit'
 import usersRouter from "./router/users.router.js";
 import medsRouter from "./router/meds.router.js";
 import shoppingListRouter from "./router/shoppingLists.router.js";
+import couponsRouter from "./router/coupons.router.js";
 
 import pkg from "../package.json" with { type: "json" };
 
@@ -35,7 +36,8 @@ try {
   app.get("/api/health", (_, res) => res.send("API is running"));
   app.use("/api/users", usersRouter);
   app.use("/api/meds", medsRouter);
-  app.use("/api/shopping-lists", shoppingListRouter)
+  app.use("/api/shopping-lists", shoppingListRouter);
+  app.use("/api/coupons", couponsRouter);
 
   app.listen(PORT, () => console.log(`Listening on PORT ${PORT}`));
 } catch (error) {

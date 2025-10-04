@@ -44,6 +44,17 @@ function initDatabase() {
       created_at INTEGER NOT NULL,
       FOREIGN KEY (med_owner) REFERENCES users (user_id)
     );
+
+    CREATE TABLE IF NOT EXISTS coupons (
+      coupon_id TEXT PRIMARY KEY,
+      med_owner TEXT NOT NULL,
+      name TEXT NOT NULL,
+      website TEXT,
+      expired_at INTEGER NOT NULL,
+      created_at INTEGER NOT NULL,
+      UNIQUE(name, expired_at),
+      FOREIGN KEY (med_owner) REFERENCES users (user_id)
+    );
   `;
 
   database.exec(init_database);
