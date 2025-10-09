@@ -6,13 +6,15 @@ const createEntry = database.prepare(`
     med_owner,
     name,
     website,
+    notes,
     expired_at,
     created_at
-  ) VALUES (?, ?, ?, ?, ?, ?)
+  ) VALUES (?, ?, ?, ?, ?, ?, ?)
   RETURNING
     coupon_id,
     name,
     website,
+    notes,
     expired_at,
     created_at  
 `);
@@ -33,12 +35,14 @@ const updateEntry = database.prepare(`
     SET
       name = ?,
       website = ?,
+      notes = ?,
       expired_at = ?
   WHERE med_owner = ? AND coupon_id = ?
   RETURNING
     coupon_id,
     name,
     website,
+    notes,
     expired_at,
     created_at  
 `);

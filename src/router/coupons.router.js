@@ -13,7 +13,7 @@ const couponsRouter = express.Router();
 
 // CREATE
 couponsRouter.post("/", authenticate, (req, res) => {
-  const { name, website, expiredAt } = req.body;
+  const { name, website, notes, expiredAt } = req.body;
 
   if (!name) {
     return res.status(400).json({ error: "Missing required property: 'name'" });
@@ -30,6 +30,7 @@ couponsRouter.post("/", authenticate, (req, res) => {
     req.user.user_id,
     name,
     website ?? null,
+    notes ?? null,
     expiredAt,
     Date.now()
   );
@@ -38,6 +39,7 @@ couponsRouter.post("/", authenticate, (req, res) => {
     id: added.coupon_id,
     name,
     website,
+    notes,
     expiredAt: new Date(added.expired_at).toISOString(),
     createdAt: new Date(added.created_at).toISOString(),
   });
@@ -47,19 +49,22 @@ couponsRouter.post("/", authenticate, (req, res) => {
 couponsRouter.get("/", authenticate, (req, res) => {
   const entries = getByUserId.all(req.user.user_id);
   return res.status(200).json(
-    entries.map(({ coupon_id, name, website, expired_at, created_at }) => ({
-      id: coupon_id,
-      name,
-      website,
-      expiredAt: new Date(expired_at).toISOString(),
-      createdAt: new Date(created_at).toISOString(),
-    }))
+    entries.map(
+      ({ coupon_id, name, website, notes, expired_at, created_at }) => ({
+        id: coupon_id,
+        name,
+        website,
+        notes,
+        expiredAt: new Date(expired_at).toISOString(),
+        createdAt: new Date(created_at).toISOString(),
+      })
+    )
   );
 });
 
 // UPDATE
 couponsRouter.put("/:id", authenticate, (req, res) => {
-  const { name, website, expiredAt } = req.body;
+  const { name, website, notes, expiredAt } = req.body;
   const id = req.params.id;
 
   const recorded = getById.get(id);
@@ -76,6 +81,7 @@ couponsRouter.put("/:id", authenticate, (req, res) => {
   const updated = updateEntry.get(
     name,
     website ?? null,
+    notes ?? null,
     expiredAt,
     recorded.med_owner,
     id
@@ -87,6 +93,7 @@ couponsRouter.put("/:id", authenticate, (req, res) => {
       id: updated.coupon_id,
       name,
       website: updated.website,
+      notes: updated.notes,
       expiredAt: new Date(updated.expired_at).toISOString(),
       createdAt: new Date(updated.created_at).toISOString(),
     },

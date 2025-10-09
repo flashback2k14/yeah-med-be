@@ -29,6 +29,7 @@ x-user-id: {{login.response.body.user.userId}}
 {
     "name": "coupon #1",
     "website": "https://web.shop",
+    "notes": "MBW: 30€",
     "expiredAt": "1759583264000"
 }
 
