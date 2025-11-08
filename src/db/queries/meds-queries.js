@@ -12,9 +12,10 @@ const createMed = database.prepare(`
     location, 
     count,
     company,
+    in_use,
     expired_at, 
     created_at
-  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   RETURNING 
     med_id,
     name, 
@@ -25,6 +26,7 @@ const createMed = database.prepare(`
     location, 
     count,
     company,
+    in_use,
     expired_at, 
     created_at
 `);
@@ -35,7 +37,9 @@ const getMedsByUserId = database.prepare(`
     ,unixepoch(m.expired_at) <= unixepoch(datetime('now')) as is_expired
   FROM MEDS m
   WHERE med_owner = ?
-  ORDER BY unixepoch(m.expired_at) <= unixepoch(datetime('now')) DESC
+  ORDER BY 
+     unixepoch(m.expired_at) <= unixepoch(datetime('now')) DESC
+    ,m.in_use DESC
 `);
 
 const getMedById = database.prepare(`
@@ -61,6 +65,7 @@ const updateMedById = database.prepare(`
       location = ?, 
       count = ?,
       company = ?,
+      in_use = ?,
       expired_at = ? 
   WHERE med_owner = ? AND med_id = ? 
   RETURNING 
@@ -73,6 +78,27 @@ const updateMedById = database.prepare(`
     location, 
     count,
     company,
+    in_use,
+    expired_at, 
+    created_at
+`);
+
+const toggleMedInUse = database.prepare(`
+  UPDATE meds 
+    SET 
+      in_use = ?
+  WHERE med_owner = ? AND med_id = ? 
+  RETURNING 
+    med_id, 
+    name, 
+    description, 
+    product_id, 
+    category, 
+    category_color, 
+    location, 
+    count,
+    company,
+    in_use,
     expired_at, 
     created_at
 `);
@@ -88,5 +114,6 @@ export {
   getCategories,
   getLocations,
   updateMedById,
+  toggleMedInUse,
   deleteMed,
 };

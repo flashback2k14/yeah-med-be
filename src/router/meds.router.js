@@ -8,6 +8,7 @@ import {
   getLocations,
   updateMedById,
   deleteMed,
+  toggleMedInUse,
 } from "../db/queries/meds-queries.js";
 import authenticate from "../middleware/authenticate.js";
 
@@ -22,6 +23,7 @@ medsRouter.post("/", authenticate, (req, res) => {
     location,
     count,
     company,
+    inUse,
     expiredAt,
     description,
     productId,
@@ -60,6 +62,7 @@ medsRouter.post("/", authenticate, (req, res) => {
     location,
     count ?? null,
     company ?? null,
+    inUse ? 1 : 0,
     expiredAt,
     Date.now()
   );
@@ -76,6 +79,7 @@ medsRouter.post("/", authenticate, (req, res) => {
     categoryColor,
     expiredAt,
     joined: new Date(addedMed.created_at).toISOString(),
+    inUse: Boolean(addedMed.in_use),
   });
 });
 
@@ -94,6 +98,7 @@ medsRouter.get("/", authenticate, (req, res) => {
         location,
         count,
         company,
+        in_use,
         expired_at,
         created_at,
         is_expired,
@@ -110,6 +115,7 @@ medsRouter.get("/", authenticate, (req, res) => {
         expiredAt: new Date(expired_at).toISOString(),
         createdAt: new Date(created_at).toISOString(),
         isExpired: Boolean(is_expired),
+        inUse: Boolean(in_use),
       })
     )
   );
@@ -144,6 +150,7 @@ medsRouter.put("/:id", authenticate, (req, res) => {
     location,
     count,
     company,
+    inUse,
     expiredAt,
   } = req.body;
   const medId = req.params.id;
@@ -168,6 +175,7 @@ medsRouter.put("/:id", authenticate, (req, res) => {
     location,
     count ?? null,
     company ?? null,
+    inUse ? 1 : 0,
     expiredAt,
     recordedMed.med_owner,
     medId
@@ -185,6 +193,44 @@ medsRouter.put("/:id", authenticate, (req, res) => {
       location: updatedMed.location,
       count: updatedMed.count,
       company: updatedMed.company,
+      inUse: Boolean(updatedMed.in_use),
+      expiredAt: new Date(updatedMed.expired_at).toISOString(),
+      createdAt: new Date(updatedMed.created_at).toISOString(),
+    },
+  });
+});
+
+medsRouter.patch("/:id/inuse", authenticate, (req, res) => {
+  const medId = req.params.id;
+
+  const recordedMed = getMedById.get(medId);
+  if (!recordedMed) {
+    return res.status(404).json({ error: "Med not found" });
+  }
+
+  if (recordedMed.med_owner !== req.user.user_id) {
+    return res
+      .status(401)
+      .json({ error: "User unauthorized to update this med" });
+  }
+
+  const newValue = Boolean(recordedMed.in_use) ? 0 : 1;
+
+  const updatedMed = toggleMedInUse.get(newValue, recordedMed.med_owner, medId);
+
+  return res.status(200).json({
+    message: "Successfully toggled med in use",
+    update: {
+      id: updatedMed.med_id,
+      name: updatedMed.name,
+      description: updatedMed.description,
+      productId: updatedMed.product_id,
+      category: updatedMed.category,
+      categoryColor: updatedMed.category_color,
+      location: updatedMed.location,
+      count: updatedMed.count,
+      company: updatedMed.company,
+      inUse: Boolean(updatedMed.in_use),
       expiredAt: new Date(updatedMed.expired_at).toISOString(),
       createdAt: new Date(updatedMed.created_at).toISOString(),
     },

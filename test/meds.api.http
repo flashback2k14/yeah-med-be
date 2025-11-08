@@ -46,7 +46,8 @@ x-user-id: {{login.response.body.user.userId}}
     "expiredAt": "1750608175461",
     "category": "cat #1",
     "location": "loc #1",
-    "company": "comp #2"
+    "company": "comp #2",
+    "inUse": true
 }
 
 ### CREATE MED #3
@@ -155,6 +156,13 @@ x-user-id: {{login.response.body.user.userId}}
     "location": "loc #1",
     "company": "comp #1 - updated"
 }
+
+### PATCH
+
+PATCH {{baseUrl}}/api/meds/{{meds.response.body.$.[0].id}}/inuse HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+x-user-id: {{login.response.body.user.userId}}
 
 ### DELETE MED #1
 
